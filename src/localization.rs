@@ -1,6 +1,6 @@
 use tracing::warn;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LocalizedText {
     pub bulgarian: &'static str,
     pub chinese_cn: &'static str,
