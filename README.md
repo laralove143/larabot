@@ -15,3 +15,8 @@ Discord-compatible arrays of localized text.
 
 Provides a trait to convert an `Option` to a `Result` concisely. This is here because the Discord API returns many
 optional values.
+
+### 📝 Tracing
+
+Has a function to set up tracing with a formatter, environment filtering, conditional journald support, and log crate
+compatibility.
