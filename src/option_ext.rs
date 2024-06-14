@@ -1,31 +1,14 @@
-use std::{
-    any::type_name,
-    error::Error,
-    fmt::{Debug, Display, Formatter},
-};
+use std::any::type_name;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct NoneValueError<T> {
-    val: std::marker::PhantomData<T>,
-}
-
-impl<T> Display for NoneValueError<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Option<{}> is None", type_name::<T>())
-    }
-}
-
-impl<T: Debug> Error for NoneValueError<T> {}
+use anyhow::{Context, Result};
 
 pub trait OptionExt<T> {
-    fn ok(self) -> Result<T, NoneValueError<T>>;
+    fn ok(self) -> Result<T>;
 }
 
 impl<T> OptionExt<T> for Option<T> {
-    fn ok(self) -> Result<T, NoneValueError<T>> {
-        self.ok_or(NoneValueError {
-            val: std::marker::PhantomData,
-        })
+    fn ok(self) -> Result<T> {
+        self.context(format!("Option<{}> is None", type_name::<T>()))
     }
 }
 

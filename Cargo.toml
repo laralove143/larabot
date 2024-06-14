@@ -63,7 +63,7 @@ unwrap_used = "allow"
 wildcard_enum_match_arm = "allow"
 
 [dependencies]
-#anyhow = "1.0"
+anyhow = "1.0"
 tracing = { version = "0.1", default-features = false, features = ["std"] }
 #twilight-http = { version = "0.15", default-features = false }
 #twilight-model = "0.15"
