@@ -6,10 +6,16 @@ Although the code itself is very opinionated, feel free to fork the project and 
 
 ## ✨ Features
 
+### 🔃 Interaction Handling Flow
+
+#### 🫡 Command Creation
+
+Has a method to create a commands for the given guild or globally based on the build configuration.
+
 ### 🌐 Localization
 
-Provides a struct to hold text in a localized manner, with methods to get the text in the desired language or return
-Discord-compatible arrays of localized text.
+Has a struct to hold text in a localized manner, with methods to get the text in the desired language or return
+Discord-compatible arrays of localized texts.
 
 ### 🙈 Generic Option to Result Conversion
 
