@@ -26,3 +26,7 @@ optional values.
 
 Has a function to set up tracing with a formatter, environment filtering, conditional journald support, and log crate
 compatibility.
+
+### 🎨 Colors
+
+Allows you to use [Discord-defined colors](https://discord.com/branding) with an enum the crate provides.

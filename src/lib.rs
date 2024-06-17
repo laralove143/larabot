@@ -2,6 +2,7 @@ use anyhow::Result;
 use tracing::warn;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
+pub mod color;
 pub mod interaction;
 pub mod localization;
 pub mod option_ext;
