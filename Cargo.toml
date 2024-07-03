@@ -6,8 +6,8 @@ license = "MIT"
 
 [lints.rust]
 absolute_paths_not_starting_with_crate = "warn"
+async_fn_in_trait = "allow"
 elided_lifetimes_in_paths = "warn"
-keyword_idents = "warn"
 let_underscore_drop = "warn"
 macro_use_extern_crate = "warn"
 meta_variable_misuse = "warn"
@@ -40,6 +40,7 @@ absolute_paths = "allow"
 blanket_clippy_restriction_lints = "allow"
 cargo_common_metadata = "allow"
 exhaustive_structs = "allow"
+exhaustive_enums = "allow"
 implicit_return = "allow"
 min_ident_chars = "allow"
 missing_docs_in_private_items = "allow"
@@ -59,15 +60,19 @@ single_call_fn = "allow"
 single_char_lifetime_names = "allow"
 std_instead_of_alloc = "allow"
 std_instead_of_core = "allow"
+separated-literal-suffix = "allow"
 unwrap_used = "allow"
 wildcard_enum_match_arm = "allow"
 
 [dependencies]
 anyhow = "1.0"
+sparkle_interactions = { version = "0.15", features = ["respond_on_delay"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
 tracing-journald = "0.3"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 twilight-http = { version = "0.15", features = ["rustls-webpki-roots", "simd-json", "trust-dns"] }
 twilight-model = "0.15"
+twilight-util = { version = "0.15", features = ["builder"] }
+
 [dev-dependencies]
 log = "0.4"

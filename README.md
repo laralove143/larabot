@@ -12,10 +12,19 @@ Although the code itself is very opinionated, feel free to fork the project and 
 
 Has a method to create a commands for the given guild or globally based on the build configuration.
 
+#### 🏃 Interaction Handling
+
+Provides a trait to handle the interaction, which is meant to be implemented on each interaction's struct.
+
+The trait's provided `handle` method sets up automatic deferring, runs the interaction, and handles the error by
+reporting it to the user.
+
 ### 🌐 Localization
 
 Has a struct to hold text in a localized manner, with methods to get the text in the desired language or return
 Discord-compatible arrays of localized texts.
+
+All user-facing texts used in this crate are also localized.
 
 ### 🙈 Generic Option to Result Conversion
 
