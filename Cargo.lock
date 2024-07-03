@@ -621,12 +621,14 @@ name = "larabot"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "log",
+ "sparkle_interactions",
  "tracing",
  "tracing-journald",
- "tracing-log",
  "tracing-subscriber",
  "twilight-http",
  "twilight-model",
+ "twilight-util",
 ]
 
 [[package]]
@@ -1238,6 +1240,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "sparkle_interactions"
+version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7bf7ec08b4d8ce595a9cc0d48bdacba84727df71f5c1939a6cbd797ccea7fdd0"
+dependencies = [
+ "tokio",
+ "twilight-http",
+ "twilight-model",
+ "twilight-validate",
+]
+
+[[package]]
 name = "spin"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1591,6 +1605,16 @@ dependencies = [
  "serde-value",
  "serde_repr",
  "time",
+]
+
+[[package]]
+name = "twilight-util"
+version = "0.15.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe3149347d8222e042a55deba80cd32f93f14770bbb845b8e4cfbd70a5062c56"
+dependencies = [
+ "twilight-model",
+ "twilight-validate",
 ]
 
 [[package]]
