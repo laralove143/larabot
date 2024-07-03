@@ -62,7 +62,7 @@ pub trait AppInteraction: Sized {
 }
 
 pub async fn set_commands(
-    client: Client,
+    client: &Client,
     application_id: Id<ApplicationMarker>,
     commands: &[Command],
     guild_id: Id<GuildMarker>,
