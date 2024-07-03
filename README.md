@@ -36,6 +36,10 @@ optional values.
 Has a function to set up tracing with a formatter, environment filtering, conditional journald support, and log crate
 compatibility.
 
+### 📡 Event Handling
+
+Provides methods to handle the ready event, errors that occur while handling events or while receiving an event.
+
 ### 🎨 Colors
 
 Allows you to use [Discord-defined colors](https://discord.com/branding) with an enum the crate provides.

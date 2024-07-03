@@ -70,6 +70,7 @@ sparkle_interactions = { version = "0.15", features = ["respond_on_delay"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
 tracing-journald = "0.3"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+twilight-gateway = "0.15"
 twilight-http = { version = "0.15", features = ["rustls-webpki-roots", "simd-json", "trust-dns"] }
 twilight-model = "0.15"
 twilight-util = { version = "0.15", features = ["builder"] }
