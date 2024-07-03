@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::Result;
 use tracing::{error, info};
 use twilight_gateway::error::ReceiveMessageError;
 use twilight_model::gateway::payload::incoming::Ready;
@@ -22,7 +22,7 @@ pub fn handle_receive_message_error(err: ReceiveMessageError) -> Result<()> {
 
     error!(
         ?err,
-        "A fatal error occurred while receiving an event, exiting"
+        "An error occurred while receiving an event."
     );
     Ok(())
 }
