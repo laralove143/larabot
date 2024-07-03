@@ -20,9 +20,6 @@ pub fn handle_receive_message_error(err: ReceiveMessageError) -> Result<()> {
         return Err(err.into());
     }
 
-    error!(
-        ?err,
-        "An error occurred while receiving an event."
-    );
+    error!(?err, "An error occurred while receiving an event.");
     Ok(())
 }
