@@ -75,26 +75,23 @@ impl LocalizedText {
         ]
     }
 
+    #[must_use]
     pub fn get(self, locale: &str) -> &'static str {
-        let Some(locale_inner) = self
-            .as_discord_localized_kv()
+        self.as_discord_localized_kv()
             .into_iter()
             .find_map(|(lang, text)| (lang == locale).then_some(text))
-        else {
-            warn!(language_code = locale, "unknown locale");
+            .unwrap_or_else(|| {
+                warn!(
+                    language_code = locale,
+                    "Unknown locale, defaulting to English."
+                );
 
-            return self.english_us;
-        };
-
-        locale_inner
+                self.english_us
+            })
     }
 
     #[must_use]
     pub fn get_with_default(self, locale: Option<&str>) -> &'static str {
-        let Some(locale_inner) = locale else {
-            return self.english_us;
-        };
-
-        self.get(locale_inner)
+        locale.map_or(self.english_us, |locale_inner| self.get(locale_inner))
     }
 }
