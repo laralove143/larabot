@@ -170,7 +170,7 @@ pub fn error_response(locale: Option<&str>) -> InteractionResponse {
     let error_components = ComponentsBuilder::new()
         .buttons(vec![
             ButtonBuilder::with_url(
-                "https://discord.lara.lv".to_owned(),
+                "https://discord.com/invite/KUMdnjcE97".to_owned(),
                 SUPPORT_SERVER_BUTTON_LABEL
                     .get_with_default(locale)
                     .to_owned(),
