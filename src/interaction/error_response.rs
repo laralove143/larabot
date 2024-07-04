@@ -159,7 +159,7 @@ const SUPPORT_SERVER_BUTTON_LABEL: LocalizedText = LocalizedText {
 pub fn error_response(locale: Option<&str>) -> InteractionResponse {
     let error_embed = EmbedBuilder::new()
         .color(Color::Red.into())
-        .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji%2Fgrimacing.webp").unwrap())
+        .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji%2Fgrimacing.gif").unwrap())
         .title(EMBED_TITLE.get_with_default(locale))
         .description(EMBED_DESCRIPTION.get_with_default(locale))
         .footer(EmbedFooterBuilder::new(
