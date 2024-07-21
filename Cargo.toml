@@ -66,9 +66,9 @@ wildcard_enum_match_arm = "allow"
 
 [dependencies]
 anyhow = "1.0"
+sentry = { version = "0.34", default-features = false, features = ["anyhow", "backtrace", "panic", "reqwest", "rustls", "tracing"] }
 sparkle_interactions = { version = "0.15", features = ["respond_on_delay"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
-tracing-journald = "0.3"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 twilight-gateway = "0.15"
 twilight-http = { version = "0.15", features = ["rustls-webpki-roots", "simd-json", "trust-dns"] }
@@ -76,4 +76,5 @@ twilight-model = "0.15"
 twilight-util = { version = "0.15", features = ["builder"] }
 
 [dev-dependencies]
+dotenvy = "0.15"
 log = "0.4"
