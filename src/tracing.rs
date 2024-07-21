@@ -1,12 +1,10 @@
-use std::env;
-
-use sentry::{release_name, ClientInitGuard, SessionMode};
+use sentry::{release_name, types::Dsn, ClientInitGuard, SessionMode};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
-pub fn init() -> anyhow::Result<ClientInitGuard> {
+pub fn init(dsn: Dsn) -> anyhow::Result<ClientInitGuard> {
     let sentry_guard = sentry::init(sentry::ClientOptions {
         auto_session_tracking: true,
-        dsn: Some(env::var("SENTRY_DSN")?.parse()?),
+        dsn: Some(dsn),
         release: release_name!(),
         session_mode: SessionMode::Request,
         ..Default::default()
@@ -24,7 +22,7 @@ pub fn init() -> anyhow::Result<ClientInitGuard> {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use std::env;
 
     use anyhow::{anyhow, Result};
@@ -32,11 +30,11 @@ mod tests {
     use sentry::ClientInitGuard;
     use tracing::{debug, error, info, trace, warn};
 
-    fn init() -> Result<ClientInitGuard> {
+    pub fn init() -> Result<ClientInitGuard> {
         dotenv()?;
         env::set_var("RUST_LOG", "info");
 
-        crate::tracing::init()
+        crate::tracing::init(env::var("SENTRY_DSN")?.parse()?)
     }
 
     #[test]
