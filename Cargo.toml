@@ -69,7 +69,7 @@ wildcard_enum_match_arm = "allow"
 anyhow = "1.0"
 reqwest = { version = "0.12", default-features = false, features = ["http2", "json", "rustls-tls"] }
 sentry = { version = "0.34", default-features = false, features = ["anyhow", "backtrace", "panic", "reqwest", "rustls", "tracing"] }
-serde = { version = "1.0.203", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
 sparkle_interactions = { version = "0.15", features = ["respond_on_delay"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

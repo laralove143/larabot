@@ -1,14 +1,20 @@
-use sparkle_interactions::builder::{
-    component::{ButtonBuilder, ComponentsBuilder},
-    InteractionResponseBuilder,
-};
-use twilight_model::{http::interaction::InteractionResponse, id::Id};
+use anyhow::Result;
+use sparkle_interactions::builder::{component::ComponentsBuilder, InteractionResponseBuilder};
+use twilight_model::http::interaction::InteractionResponse;
 use twilight_util::builder::{
     embed::{EmbedBuilder, EmbedFooterBuilder, ImageSource},
     InteractionResponseDataBuilder,
 };
 
-use crate::{color::Color, localization::LocalizedText};
+use crate::{
+    color::Color,
+    interaction::{
+        button::support_server_invite,
+        feedback::button::{FeedbackButton, FeedbackButtonRequiredData},
+        CreateButton,
+    },
+    localization::LocalizedText,
+};
 
 // noinspection SpellCheckingInspection
 const EMBED_TITLE: LocalizedText = LocalizedText {
@@ -86,80 +92,44 @@ const EMBED_DESCRIPTION: LocalizedText = LocalizedText {
 // noinspection SpellCheckingInspection
 #[rustfmt::skip]
 const EMBED_FOOTER_TEXT: LocalizedText = LocalizedText {
-    bulgarian: "Не се колебайте да се свържете с разработчика от сървъра за поддръжка за повече информация.",
-    chinese_cn: "如需更多信息，请随时联系支持服务器上的开发者。",
-    chinese_tw: "如需更多資訊，請隨時聯繫支持伺服器上的開發者。",
-    croatian: "Slobodno kontaktirajte razvojnog programera sa poslužitelja podrške za više informacija.",
-    czech: "Pro další informace neváhejte kontaktovat vývojáře na serveru podpory.",
-    danish: "Du er velkommen til at kontakte udvikleren fra supportserveren for yderligere oplysninger.",
-    dutch: "Neem gerust contact op met de ontwikkelaar van de ondersteuningsserver voor meer informatie.",
-    english_uk: "Feel free to contact the developer from the support server for more information.",
-    english_us: "Feel free to contact the developer from the support server for more information.",
-    finnish: "Voit ottaa yhteyttä kehittäjään tukipalvelimelta lisätietoja varten.",
-    french: "N'hésitez pas à contacter le développeur via le serveur de support pour plus d'informations.",
-    german: "Kontaktieren Sie den Entwickler vom Support-Server aus für weitere Informationen.",
-    greek: "Μη διστάσετε να επικοινωνήσετε με τον προγραμματιστή από τον διακομιστή υποστήριξης για περισσότερες πληροφορίες.",
-    hindi: "अधिक जानकारी के लिए सहायता सर्वर से डेवलपर से संपर्क करने में संकोच न करें।",
-    hungarian: "Nyugodtan lépjen kapcsolatba a fejlesztővel a támogatási szerveren keresztül további információkért.",
-    indonesian: "Jangan ragu untuk menghubungi pengembang dari server dukungan untuk informasi lebih lanjut.",
-    italian: "Sentiti libero di contattare lo sviluppatore dal server di supporto per maggiori informazioni.",
-    japanese: "詳細については、サポートサーバーの開発者にお気軽にお問い合わせください。",
-    korean: "추가 정보가 필요하시면 지원 서버의 개발자에게 언제든지 연락하십시오.",
-    lithuanian: "Jei reikia daugiau informacijos, nedvejodami susisiekite su kūrėju palaikymo serveryje.",
-    norwegian: "Du kan gjerne kontakte utvikleren fra støtteserveren for mer informasjon.",
-    polish: "Skontaktuj się z deweloperem z serwera wsparcia, jeśli potrzebujesz więcej informacji.",
-    portuguese_br: "Sinta-se à vontade para contatar o desenvolvedor do servidor de suporte para mais informações.",
-    romanian: "Nu ezitați să contactați dezvoltatorul de pe serverul de suport pentru mai multe informații.",
-    russian: "Не стесняйтесь обращаться к разработчику с сервера поддержки за дополнительной информацией.",
-    spanish: "No dude en contactar al desarrollador del servidor de soporte para obtener más información.",
-    spanish_latam: "No dude en contactar al desarrollador del servidor de soporte para obtener más información.",
-    swedish: "Du är välkommen att kontakta utvecklaren från supportservern för mer information.",
-    thai: "อย่าลังเลที่จะติดต่อนักพัฒนาจากเซิร์ฟเวอร์สนับสนุนเพื่อขอข้อมูลเพิ่มเติม",
-    turkish: "Daha fazla bilgi için destek sunucusundaki geliştiriciyle iletişime geçmekten çekinmeyin.",
-    ukrainian: "Не соромтеся звертатися до розробника з сервера підтримки за додатковою інформацією.",
-    vietnamese: "Đừng ngại liên hệ với nhà phát triển từ máy chủ hỗ trợ để biết thêm thông tin.",
+    bulgarian: "Не се колебайте да предоставите повече подробности за грешката, използвайки бутона за обратна връзка.",
+    chinese_cn: "随时使用反馈按钮提供有关错误的更多详细信息。",
+    chinese_tw: "隨時使用回饋按鈕提供有關錯誤的更多詳細信息。",
+    croatian: "Slobodno pružite više detalja o pogrešci koristeći gumb za povratne informacije.",
+    czech: "Klidně poskytněte více podrobností o chybě pomocí tlačítka pro zpětnou vazbu.",
+    danish: "Du er velkommen til at give flere detaljer om fejlen ved at bruge feedbackknappen.",
+    dutch: "Voel je vrij om meer details over de fout te verstrekken met de feedbackknop.",
+    english_uk: "Feel free to provide more details about the error using the feedback button.",
+    english_us: "Feel free to provide more details about the error using the feedback button.",
+    finnish: "Voit antaa lisätietoja virheestä käyttämällä palautepainiketta.",
+    french: "N'hésitez pas à fournir plus de détails sur l'erreur en utilisant le bouton de feedback.",
+    german: "Fühlen Sie sich frei, mehr Details über den Fehler mit dem Feedback-Button zu geben.",
+    greek: "Μη διστάσετε να δώσετε περισσότερες λεπτομέρειες για το σφάλμα χρησιμοποιώντας το κουμπί ανατροφοδότησης.",
+    hindi: "फीडबैक बटन का उपयोग करके त्रुटि के बारे में अधिक विवरण प्रदान करने में संकोच न करें।",
+    hungarian: "Nyugodtan adjon meg több részletet a hiba kapcsán a visszajelzés gomb használatával.",
+    indonesian: "Jangan ragu untuk memberikan lebih banyak detail tentang kesalahan menggunakan tombol umpan balik.",
+    italian: "Sentiti libero di fornire ulteriori dettagli sull'errore utilizzando il pulsante di feedback.",
+    japanese: "フィードバックボタンを使用してエラーの詳細を自由に提供してください。",
+    korean: "피드백 버튼을 사용하여 오류에 대한 자세한 내용을 자유롭게 제공하십시오.",
+    lithuanian: "Nedvejodami pateikite daugiau informacijos apie klaidą naudodami atsiliepimų mygtuką.",
+    norwegian: "Føl deg fri til å gi flere detaljer om feilen ved å bruke tilbakemeldingsknappen.",
+    polish: "Śmiało podaj więcej szczegółów na temat błędu za pomocą przycisku opinii.",
+    portuguese_br: "Fique à vontade para fornecer mais detalhes sobre o erro usando o botão de feedback.",
+    romanian: "Nu ezitați să oferiți mai multe detalii despre eroare utilizând butonul de feedback.",
+    russian: "Не стесняйтесь предоставлять дополнительные сведения об ошибке, используя кнопку отзыва.",
+    spanish: "No dude en proporcionar más detalles sobre el error utilizando el botón de retroalimentación.",
+    spanish_latam: "No dude en proporcionar más detalles sobre el error utilizando el botón de feedback.",
+    swedish: "Du är välkommen att ge mer detaljer om felet med hjälp av feedbackknappen.",
+    thai: "อย่าลังเลที่จะให้รายละเอียดเพิ่มเติมเกี่ยวกับข้อผิดพลาดโดยใช้ปุ่มข้อเสนอแนะ",
+    turkish: "Geri Bildirim Düğmesini kullanarak hatayla ilgili daha fazla detay sağlamaktan çekinmeyin.",
+    ukrainian: "Не соромтеся надавати більше деталей про помилку, використовуючи кнопку відгуку.",
+    vietnamese: "Cứ thoải mái cung cấp thêm chi tiết về lỗi bằng nút phản hồi.",
 };
 
-// noinspection SpellCheckingInspection
-const SUPPORT_SERVER_BUTTON_LABEL: LocalizedText = LocalizedText {
-    bulgarian: "Сървър за поддръжка",
-    chinese_cn: "支持服务器",
-    chinese_tw: "支援伺服器",
-    croatian: "Poslužitelj podrške",
-    czech: "Podpůrný server",
-    danish: "Supportserver",
-    dutch: "Supportserver",
-    english_uk: "Support Server",
-    english_us: "Support Server",
-    finnish: "Tukipalvelin",
-    french: "Serveur de support",
-    german: "Support-Server",
-    greek: "Διακομιστής υποστήριξης",
-    hindi: "समर्थन सर्वर",
-    hungarian: "Támogatási szerver",
-    indonesian: "Server Dukungan",
-    italian: "Server di supporto",
-    japanese: "サポートサーバー",
-    korean: "지원 서버",
-    lithuanian: "Palaikymo serveris",
-    norwegian: "Supportserver",
-    polish: "Serwer wsparcia",
-    portuguese_br: "Servidor de Suporte",
-    romanian: "Server de suport",
-    russian: "Сервер поддержки",
-    spanish: "Servidor de Soporte",
-    spanish_latam: "Servidor de Soporte",
-    swedish: "Supportserver",
-    thai: "เซิร์ฟเวอร์สนับสนุน",
-    turkish: "Destek Sunucusu",
-    ukrainian: "Сервер підтримки",
-    vietnamese: "Máy chủ hỗ trợ",
-};
-
-pub fn error_response(locale: Option<&str>) -> InteractionResponse {
+pub fn error_response(locale: Option<&str>) -> Result<InteractionResponse> {
     let error_embed = EmbedBuilder::new()
         .color(Color::Red.into())
-        .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji%2Fgrimacing.gif").unwrap())
+        .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji/grimacing.gif").unwrap())
         .title(EMBED_TITLE.get_with_default(locale))
         .description(EMBED_DESCRIPTION.get_with_default(locale))
         .footer(EmbedFooterBuilder::new(
@@ -167,28 +137,19 @@ pub fn error_response(locale: Option<&str>) -> InteractionResponse {
         ))
         .build();
 
-    let error_components = ComponentsBuilder::new()
-        .buttons(vec![
-            ButtonBuilder::with_url(
-                "https://discord.com/invite/KUMdnjcE97".to_owned(),
-                SUPPORT_SERVER_BUTTON_LABEL
-                    .get_with_default(locale)
-                    .to_owned(),
-            )
-            .custom_emoji(
-                "bellhopbell".to_owned(),
-                #[allow(clippy::unreadable_literal)]
-                Id::new(1251928481474936955),
-                true,
-            )
-            .build(),
-        ])
-        .build();
-
-    InteractionResponseBuilder::send_message(
+    Ok(InteractionResponseBuilder::send_message(
         InteractionResponseDataBuilder::new()
             .embeds([error_embed])
-            .components(error_components)
+            .components(
+                ComponentsBuilder::new()
+                    .buttons(vec![
+                        FeedbackButton::button(FeedbackButtonRequiredData {
+                            locale: locale.map(ToOwned::to_owned),
+                        })?,
+                        support_server_invite(locale),
+                    ])
+                    .build(),
+            )
             .build(),
-    )
+    ))
 }

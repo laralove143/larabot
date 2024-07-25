@@ -1,28 +1,61 @@
 use std::{sync::Arc, time::Duration};
 
 use anyhow::Result;
-use sparkle_interactions::{builder::InteractionResponseBuilder, InteractionHandle};
+use sparkle_interactions::{
+    builder::InteractionResponseBuilder, extract::ExtractInteractionData, InteractionHandle,
+};
 use tracing::info;
 use twilight_http::Client;
 use twilight_model::{
     application::{command::Command, interaction::Interaction},
+    channel::message::component::{Button, TextInput},
+    http::interaction::InteractionResponse,
     id::{
         marker::{ApplicationMarker, GuildMarker},
         Id,
     },
 };
 
+use crate::{
+    interaction::feedback::{button::FeedbackButton, command::FeedbackCommand},
+    option_ext::OptionExt,
+};
+
+mod button;
 mod error_response;
+mod feedback;
 
 pub trait CreateCommand {
     fn command() -> Result<Command>;
 }
 
+pub trait CreateButton {
+    type RequiredData;
+
+    fn button(data: Self::RequiredData) -> Result<Button>;
+}
+
+pub trait CreateModal {
+    type RequiredData;
+
+    fn show_response(data: Self::RequiredData) -> Result<InteractionResponse>;
+}
+
+pub trait CreateTextInput {
+    type RequiredData;
+
+    const CUSTOM_ID: &'static str;
+
+    fn text_input(data: Self::RequiredData) -> Result<TextInput>;
+}
+
 pub trait AppInteraction: Sized {
+    type RequiredData;
+
     const CUSTOM_ID: &'static str;
     const IS_EPHEMERAL: bool;
 
-    fn new(interaction: Interaction) -> Result<Self>;
+    fn new(interaction: Interaction, data: Self::RequiredData) -> Result<Self>;
 
     async fn run(self, handle: InteractionHandle) -> Result<()>;
 
@@ -51,7 +84,7 @@ pub trait AppInteraction: Sized {
             handle
                 .respond(error_response::error_response(
                     interaction.locale.as_deref(),
-                ))
+                )?)
                 .await?;
 
             return Err(err);
@@ -61,13 +94,39 @@ pub trait AppInteraction: Sized {
     }
 }
 
+pub async fn handle_common_interaction(
+    client: Arc<Client>,
+    interaction: Interaction,
+) -> Result<()> {
+    let custom_id = interaction.data.as_ref().ok()?.custom_id().ok()?;
+
+    #[allow(unreachable_patterns)]
+    match custom_id {
+        FeedbackButton::CUSTOM_ID => {
+            FeedbackButton::new(interaction.clone(), ())?
+                .handle(client, &interaction)
+                .await?;
+        }
+        FeedbackCommand::CUSTOM_ID => {
+            FeedbackCommand::new(interaction.clone(), ())?
+                .handle(client, &interaction)
+                .await?;
+        }
+        _ => (),
+    }
+
+    Ok(())
+}
+
 pub async fn set_commands(
     client: &Client,
     application_id: Id<ApplicationMarker>,
-    commands: &[Command],
+    mut commands: Vec<Command>,
     guild_id: Id<GuildMarker>,
 ) -> Result<()> {
     let interaction_client = client.interaction(application_id);
+
+    commands.push(FeedbackCommand::command()?);
 
     let command_names = commands
         .iter()
@@ -77,7 +136,7 @@ pub async fn set_commands(
 
     if cfg!(debug_assertions) {
         interaction_client
-            .set_guild_commands(guild_id, commands)
+            .set_guild_commands(guild_id, &commands)
             .await?;
 
         info!(
@@ -86,7 +145,7 @@ pub async fn set_commands(
             "Set commands in testing guild.",
         );
     } else {
-        interaction_client.set_global_commands(commands).await?;
+        interaction_client.set_global_commands(&commands).await?;
 
         info!(Commands = command_names, "Set commands globally.");
     }
