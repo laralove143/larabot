@@ -6,10 +6,7 @@ use twilight_model::{
 };
 
 use crate::{
-    interaction::{
-        feedback::modal::{FeedbackModal, FeedbackModalRequiredData},
-        AppInteraction, CreateButton, CreateModal,
-    },
+    interaction::{feedback::modal::FeedbackModal, AppInteraction, CreateButton, CreateModal},
     localization::LocalizedText,
 };
 
@@ -53,19 +50,13 @@ pub struct FeedbackButton {
     locale: Option<String>,
 }
 
-pub struct FeedbackButtonRequiredData {
-    pub locale: Option<String>,
-}
-
 impl CreateButton for FeedbackButton {
-    type RequiredData = FeedbackButtonRequiredData;
+    type RequiredData = ();
 
-    fn button(data: Self::RequiredData) -> Result<Button> {
+    fn button(_data: Self::RequiredData, locale: Option<&str>) -> Result<Button> {
         Ok(ButtonBuilder::with_custom_id(
             Self::CUSTOM_ID.to_owned(),
-            BUTTON_LABEL
-                .get_with_default(data.locale.as_deref())
-                .to_owned(),
+            BUTTON_LABEL.get_with_default(locale).to_owned(),
             ButtonStyle::Secondary,
         )
         .build())
@@ -86,9 +77,7 @@ impl AppInteraction for FeedbackButton {
 
     async fn run(self, handle: InteractionHandle) -> Result<()> {
         handle
-            .respond(FeedbackModal::show_response(FeedbackModalRequiredData {
-                locale: self.locale,
-            })?)
+            .respond(FeedbackModal::show_response((), self.locale.as_deref())?)
             .await?;
 
         Ok(())

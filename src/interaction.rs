@@ -32,13 +32,14 @@ pub trait CreateCommand {
 pub trait CreateButton {
     type RequiredData;
 
-    fn button(data: Self::RequiredData) -> Result<Button>;
+    fn button(data: Self::RequiredData, locale: Option<&str>) -> Result<Button>;
 }
 
 pub trait CreateModal {
     type RequiredData;
 
-    fn show_response(data: Self::RequiredData) -> Result<InteractionResponse>;
+    fn show_response(data: Self::RequiredData, locale: Option<&str>)
+    -> Result<InteractionResponse>;
 }
 
 pub trait CreateTextInput {
@@ -46,7 +47,7 @@ pub trait CreateTextInput {
 
     const CUSTOM_ID: &'static str;
 
-    fn text_input(data: Self::RequiredData) -> Result<TextInput>;
+    fn text_input(data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput>;
 }
 
 pub trait AppInteraction: Sized {

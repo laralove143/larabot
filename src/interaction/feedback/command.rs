@@ -7,10 +7,7 @@ use twilight_model::application::{
 use twilight_util::builder::command::CommandBuilder;
 
 use crate::{
-    interaction::{
-        feedback::modal::{FeedbackModal, FeedbackModalRequiredData},
-        AppInteraction, CreateCommand, CreateModal,
-    },
+    interaction::{feedback::modal::FeedbackModal, AppInteraction, CreateCommand, CreateModal},
     localization::LocalizedText,
 };
 
@@ -117,9 +114,7 @@ impl AppInteraction for FeedbackCommand {
 
     async fn run(self, handle: InteractionHandle) -> Result<()> {
         handle
-            .respond(FeedbackModal::show_response(FeedbackModalRequiredData {
-                locale: self.locale,
-            })?)
+            .respond(FeedbackModal::show_response((), self.locale.as_deref())?)
             .await?;
 
         Ok(())

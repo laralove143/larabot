@@ -283,20 +283,18 @@ const EMBED_FOOTER: LocalizedText = LocalizedText {
 struct ContactTextInput;
 
 impl CreateTextInput for ContactTextInput {
-    type RequiredData = FeedbackModalRequiredData;
+    type RequiredData = ();
 
     const CUSTOM_ID: &'static str = "contact";
 
-    fn text_input(data: Self::RequiredData) -> Result<TextInput> {
+    fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
-            CONTACT_INPUT_LABEL
-                .get_with_default(data.locale.as_deref())
-                .to_owned(),
+            CONTACT_INPUT_LABEL.get_with_default(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
         .placeholder(
             CONTACT_INPUT_PLACEHOLDER
-                .get_with_default(data.locale.as_deref())
+                .get_with_default(locale)
                 .to_owned(),
         )
         .build())
@@ -306,15 +304,13 @@ impl CreateTextInput for ContactTextInput {
 struct ContentTextInput;
 
 impl CreateTextInput for ContentTextInput {
-    type RequiredData = FeedbackModalRequiredData;
+    type RequiredData = ();
 
     const CUSTOM_ID: &'static str = "content";
 
-    fn text_input(data: Self::RequiredData) -> Result<TextInput> {
+    fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
-            CONTENT_INPUT_LABEL
-                .get_with_default(data.locale.as_deref())
-                .to_owned(),
+            CONTENT_INPUT_LABEL.get_with_default(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
         .paragraph()
@@ -331,22 +327,20 @@ pub struct FeedbackModal {
 }
 
 impl CreateModal for FeedbackModal {
-    type RequiredData = FeedbackModalRequiredData;
+    type RequiredData = ();
 
-    fn show_response(data: Self::RequiredData) -> Result<InteractionResponse> {
+    fn show_response(
+        _data: Self::RequiredData,
+        locale: Option<&str>,
+    ) -> Result<InteractionResponse> {
         Ok(InteractionResponseBuilder::show_modal(
-            TITLE.get_with_default(data.locale.as_deref()).to_owned(),
+            TITLE.get_with_default(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
-        .text_input(ContentTextInput::text_input(data.clone())?)
-        .text_input(ContactTextInput::text_input(data)?)
+        .text_input(ContentTextInput::text_input((), locale)?)
+        .text_input(ContactTextInput::text_input((), locale)?)
         .build())
     }
-}
-
-#[derive(Clone)]
-pub struct FeedbackModalRequiredData {
-    pub locale: Option<String>,
 }
 
 impl AppInteraction for FeedbackModal {

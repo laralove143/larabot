@@ -8,11 +8,7 @@ use twilight_util::builder::{
 
 use crate::{
     color::Color,
-    interaction::{
-        button::support_server_invite,
-        feedback::button::{FeedbackButton, FeedbackButtonRequiredData},
-        CreateButton,
-    },
+    interaction::{button::support_server_invite, feedback::button::FeedbackButton, CreateButton},
     localization::LocalizedText,
 };
 
@@ -143,9 +139,7 @@ pub fn error_response(locale: Option<&str>) -> Result<InteractionResponse> {
             .components(
                 ComponentsBuilder::new()
                     .buttons(vec![
-                        FeedbackButton::button(FeedbackButtonRequiredData {
-                            locale: locale.map(ToOwned::to_owned),
-                        })?,
+                        FeedbackButton::button((), locale)?,
                         support_server_invite(locale),
                     ])
                     .build(),
