@@ -42,9 +42,7 @@ const SUPPORT_SERVER_BUTTON_LABEL: LocalizedText = LocalizedText {
 pub fn support_server_invite(locale: Option<&str>) -> Button {
     ButtonBuilder::with_url(
         "https://discord.com/invite/KUMdnjcE97".to_owned(),
-        SUPPORT_SERVER_BUTTON_LABEL
-            .get_with_default(locale)
-            .to_owned(),
+        SUPPORT_SERVER_BUTTON_LABEL.get(locale).to_owned(),
     )
     .custom_emoji(
         "wave".to_owned(),

@@ -126,11 +126,9 @@ pub fn error_response(locale: Option<&str>) -> Result<InteractionResponse> {
     let error_embed = EmbedBuilder::new()
         .color(Color::Red.into())
         .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji/grimacing.gif").unwrap())
-        .title(EMBED_TITLE.get_with_default(locale))
-        .description(EMBED_DESCRIPTION.get_with_default(locale))
-        .footer(EmbedFooterBuilder::new(
-            EMBED_FOOTER_TEXT.get_with_default(locale),
-        ))
+        .title(EMBED_TITLE.get(locale))
+        .description(EMBED_DESCRIPTION.get(locale))
+        .footer(EmbedFooterBuilder::new(EMBED_FOOTER_TEXT.get(locale)))
         .build();
 
     Ok(InteractionResponseBuilder::send_message(

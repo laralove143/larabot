@@ -289,14 +289,10 @@ impl CreateTextInput for ContactTextInput {
 
     fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
-            CONTACT_INPUT_LABEL.get_with_default(locale).to_owned(),
+            CONTACT_INPUT_LABEL.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
-        .placeholder(
-            CONTACT_INPUT_PLACEHOLDER
-                .get_with_default(locale)
-                .to_owned(),
-        )
+        .placeholder(CONTACT_INPUT_PLACEHOLDER.get(locale).to_owned())
         .build())
     }
 }
@@ -310,7 +306,7 @@ impl CreateTextInput for ContentTextInput {
 
     fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
-            CONTENT_INPUT_LABEL.get_with_default(locale).to_owned(),
+            CONTENT_INPUT_LABEL.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
         .paragraph()
@@ -334,7 +330,7 @@ impl CreateModal for FeedbackModal {
         locale: Option<&str>,
     ) -> Result<InteractionResponse> {
         Ok(InteractionResponseBuilder::show_modal(
-            TITLE.get_with_default(locale).to_owned(),
+            TITLE.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
         .text_input(ContentTextInput::text_input((), locale)?)
@@ -380,10 +376,10 @@ impl AppInteraction for FeedbackModal {
         let embed = EmbedBuilder::new()
             .color(Color::Green.into())
             .thumbnail(ImageSource::url("https://cdn.lara.lv/emoji/pencil.gif")?)
-            .title(EMBED_TITLE.get_with_default(self.locale.as_deref()))
-            .description(EMBED_DESCRIPTION.get_with_default(self.locale.as_deref()))
+            .title(EMBED_TITLE.get(self.locale.as_deref()))
+            .description(EMBED_DESCRIPTION.get(self.locale.as_deref()))
             .footer(EmbedFooterBuilder::new(
-                EMBED_FOOTER.get_with_default(self.locale.as_deref()),
+                EMBED_FOOTER.get(self.locale.as_deref()),
             ))
             .build();
 

@@ -76,13 +76,12 @@ impl LocalizedText {
     }
 
     #[must_use]
-    pub fn get(self, locale: &str) -> &'static str {
-        self.as_discord_localized_kv()
-            .into_iter()
-            .find_map(|(lang, text)| (lang == locale).then_some(text))
+    pub fn get(self, locale: Option<&str>) -> &str {
+        locale
+            .and_then(|loc| self.get_with_locale(loc))
             .unwrap_or_else(|| {
                 warn!(
-                    language_code = locale,
+                    language_code = locale.unwrap_or_default(),
                     "Unknown locale, defaulting to English."
                 );
 
@@ -90,8 +89,41 @@ impl LocalizedText {
             })
     }
 
-    #[must_use]
-    pub fn get_with_default(self, locale: Option<&str>) -> &'static str {
-        locale.map_or(self.english_us, |locale_inner| self.get(locale_inner))
+    fn get_with_locale(self, locale: &str) -> Option<&str> {
+        Some(match locale {
+            "bg" => self.bulgarian,
+            "zh-CN" => self.chinese_cn,
+            "zh-TW" => self.chinese_tw,
+            "hr" => self.croatian,
+            "cs" => self.czech,
+            "da" => self.danish,
+            "nl" => self.dutch,
+            "en-GB" => self.english_uk,
+            "en-US" => self.english_us,
+            "fi" => self.finnish,
+            "fr" => self.french,
+            "de" => self.german,
+            "el" => self.greek,
+            "hi" => self.hindi,
+            "hu" => self.hungarian,
+            "id" => self.indonesian,
+            "it" => self.italian,
+            "ja" => self.japanese,
+            "ko" => self.korean,
+            "lt" => self.lithuanian,
+            "no" => self.norwegian,
+            "pl" => self.polish,
+            "pt-BR" => self.portuguese_br,
+            "ro" => self.romanian,
+            "ru" => self.russian,
+            "es-419" => self.spanish,
+            "es-ES" => self.spanish_latam,
+            "sv-SE" => self.swedish,
+            "th" => self.thai,
+            "tr" => self.turkish,
+            "uk" => self.ukrainian,
+            "vi" => self.vietnamese,
+            _ => return None,
+        })
     }
 }

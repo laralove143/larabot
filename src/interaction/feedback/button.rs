@@ -56,7 +56,7 @@ impl CreateButton for FeedbackButton {
     fn button(_data: Self::RequiredData, locale: Option<&str>) -> Result<Button> {
         Ok(ButtonBuilder::with_custom_id(
             Self::CUSTOM_ID.to_owned(),
-            BUTTON_LABEL.get_with_default(locale).to_owned(),
+            BUTTON_LABEL.get(locale).to_owned(),
             ButtonStyle::Secondary,
         )
         .build())
