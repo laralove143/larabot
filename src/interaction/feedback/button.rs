@@ -6,7 +6,10 @@ use twilight_model::{
 };
 
 use crate::{
-    interaction::{feedback::modal::FeedbackModal, AppInteraction, CreateButton, CreateModal},
+    interaction::{
+        feedback::modal::FeedbackModal, AppInteraction, CreateAppInteraction, CreateButton,
+        CreateModal,
+    },
     localization::LocalizedText,
 };
 
@@ -51,9 +54,7 @@ pub struct FeedbackButton {
 }
 
 impl CreateButton for FeedbackButton {
-    type RequiredData = ();
-
-    fn button(_data: Self::RequiredData, locale: Option<&str>) -> Result<Button> {
+    fn button(locale: Option<&str>) -> Result<Button> {
         Ok(ButtonBuilder::with_custom_id(
             Self::CUSTOM_ID.to_owned(),
             BUTTON_LABEL.get(locale).to_owned(),
@@ -63,21 +64,21 @@ impl CreateButton for FeedbackButton {
     }
 }
 
-impl AppInteraction for FeedbackButton {
-    type RequiredData = ();
-
-    const CUSTOM_ID: &'static str = "feedback";
-    const IS_EPHEMERAL: bool = false;
-
-    fn new(interaction: Interaction, _data: Self::RequiredData) -> Result<Self> {
+impl CreateAppInteraction for FeedbackButton {
+    fn new(interaction: Interaction) -> Result<Self> {
         Ok(Self {
             locale: interaction.locale,
         })
     }
+}
+
+impl AppInteraction for FeedbackButton {
+    const CUSTOM_ID: &'static str = "feedback";
+    const IS_EPHEMERAL: bool = false;
 
     async fn run(self, handle: InteractionHandle) -> Result<()> {
         handle
-            .respond(FeedbackModal::show_response((), self.locale.as_deref())?)
+            .respond(FeedbackModal::show_response(self.locale.as_deref())?)
             .await?;
 
         Ok(())

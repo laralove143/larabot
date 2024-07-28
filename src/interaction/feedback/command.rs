@@ -7,7 +7,10 @@ use twilight_model::application::{
 use twilight_util::builder::command::CommandBuilder;
 
 use crate::{
-    interaction::{feedback::modal::FeedbackModal, AppInteraction, CreateCommand, CreateModal},
+    interaction::{
+        feedback::modal::FeedbackModal, AppInteraction, CreateAppInteraction, CreateCommand,
+        CreateModal,
+    },
     localization::LocalizedText,
 };
 
@@ -100,21 +103,21 @@ impl CreateCommand for FeedbackCommand {
     }
 }
 
-impl AppInteraction for FeedbackCommand {
-    type RequiredData = ();
-
-    const CUSTOM_ID: &'static str = "feedback";
-    const IS_EPHEMERAL: bool = true;
-
-    fn new(interaction: Interaction, _data: Self::RequiredData) -> Result<Self> {
+impl CreateAppInteraction for FeedbackCommand {
+    fn new(interaction: Interaction) -> Result<Self> {
         Ok(Self {
             locale: interaction.locale,
         })
     }
+}
+
+impl AppInteraction for FeedbackCommand {
+    const CUSTOM_ID: &'static str = "feedback";
+    const IS_EPHEMERAL: bool = true;
 
     async fn run(self, handle: InteractionHandle) -> Result<()> {
         handle
-            .respond(FeedbackModal::show_response((), self.locale.as_deref())?)
+            .respond(FeedbackModal::show_response(self.locale.as_deref())?)
             .await?;
 
         Ok(())

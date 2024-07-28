@@ -137,7 +137,7 @@ pub fn error_response(locale: Option<&str>) -> Result<InteractionResponse> {
             .components(
                 ComponentsBuilder::new()
                     .buttons(vec![
-                        FeedbackButton::button((), locale)?,
+                        FeedbackButton::button(locale)?,
                         support_server_invite(locale),
                     ])
                     .build(),

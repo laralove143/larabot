@@ -30,33 +30,52 @@ pub trait CreateCommand {
 }
 
 pub trait CreateButton {
-    type RequiredData;
+    fn button(locale: Option<&str>) -> Result<Button>;
+}
 
-    fn button(data: Self::RequiredData, locale: Option<&str>) -> Result<Button>;
+pub trait CreateButtonWithData {
+    type Data;
+
+    fn button(locale: Option<&str>, data: Self::Data) -> Result<Button>;
 }
 
 pub trait CreateModal {
-    type RequiredData;
+    fn show_response(locale: Option<&str>) -> Result<InteractionResponse>;
+}
 
-    fn show_response(data: Self::RequiredData, locale: Option<&str>)
-    -> Result<InteractionResponse>;
+pub trait CreateModalWithData {
+    type Data;
+
+    fn show_response(locale: Option<&str>, data: Self::Data) -> Result<InteractionResponse>;
 }
 
 pub trait CreateTextInput {
-    type RequiredData;
+    const CUSTOM_ID: &'static str;
+
+    fn text_input(locale: Option<&str>) -> Result<TextInput>;
+}
+
+pub trait CreateTextInputWithData {
+    type Data;
 
     const CUSTOM_ID: &'static str;
 
-    fn text_input(data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput>;
+    fn text_input(locale: Option<&str>, data: Self::Data) -> Result<TextInput>;
+}
+
+pub trait CreateAppInteraction: Sized {
+    fn new(interaction: Interaction) -> Result<Self>;
+}
+
+pub trait CreateAppInteractionWithData: Sized {
+    type Data;
+
+    fn new(interaction: Interaction, data: Self::Data) -> Result<Self>;
 }
 
 pub trait AppInteraction: Sized {
-    type RequiredData;
-
     const CUSTOM_ID: &'static str;
     const IS_EPHEMERAL: bool;
-
-    fn new(interaction: Interaction, data: Self::RequiredData) -> Result<Self>;
 
     async fn run(self, handle: InteractionHandle) -> Result<()>;
 
@@ -104,12 +123,12 @@ pub async fn handle_common_interaction(
     #[allow(unreachable_patterns)]
     match custom_id {
         FeedbackButton::CUSTOM_ID => {
-            FeedbackButton::new(interaction.clone(), ())?
+            FeedbackButton::new(interaction.clone())?
                 .handle(client, &interaction)
                 .await?;
         }
         FeedbackCommand::CUSTOM_ID => {
-            FeedbackCommand::new(interaction.clone(), ())?
+            FeedbackCommand::new(interaction.clone())?
                 .handle(client, &interaction)
                 .await?;
         }

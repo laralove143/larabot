@@ -20,7 +20,10 @@ use twilight_util::builder::{
 
 use crate::{
     color::Color,
-    interaction::{button::support_server_invite, AppInteraction, CreateModal, CreateTextInput},
+    interaction::{
+        button::support_server_invite, AppInteraction, CreateAppInteractionWithData, CreateModal,
+        CreateTextInput,
+    },
     localization::LocalizedText,
     option_ext::OptionExt,
     sentry_user_feedback::FeedbackClient,
@@ -283,11 +286,9 @@ const EMBED_FOOTER: LocalizedText = LocalizedText {
 struct ContactTextInput;
 
 impl CreateTextInput for ContactTextInput {
-    type RequiredData = ();
-
     const CUSTOM_ID: &'static str = "contact";
 
-    fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
+    fn text_input(locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
             CONTACT_INPUT_LABEL.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
@@ -300,11 +301,9 @@ impl CreateTextInput for ContactTextInput {
 struct ContentTextInput;
 
 impl CreateTextInput for ContentTextInput {
-    type RequiredData = ();
-
     const CUSTOM_ID: &'static str = "content";
 
-    fn text_input(_data: Self::RequiredData, locale: Option<&str>) -> Result<TextInput> {
+    fn text_input(locale: Option<&str>) -> Result<TextInput> {
         Ok(TextInputBuilder::new(
             CONTENT_INPUT_LABEL.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
@@ -323,29 +322,21 @@ pub struct FeedbackModal {
 }
 
 impl CreateModal for FeedbackModal {
-    type RequiredData = ();
-
-    fn show_response(
-        _data: Self::RequiredData,
-        locale: Option<&str>,
-    ) -> Result<InteractionResponse> {
+    fn show_response(locale: Option<&str>) -> Result<InteractionResponse> {
         Ok(InteractionResponseBuilder::show_modal(
             TITLE.get(locale).to_owned(),
             Self::CUSTOM_ID.to_owned(),
         )
-        .text_input(ContentTextInput::text_input((), locale)?)
-        .text_input(ContactTextInput::text_input((), locale)?)
+        .text_input(ContentTextInput::text_input(locale)?)
+        .text_input(ContactTextInput::text_input(locale)?)
         .build())
     }
 }
 
-impl AppInteraction for FeedbackModal {
-    type RequiredData = Arc<FeedbackClient>;
+impl CreateAppInteractionWithData for FeedbackModal {
+    type Data = Arc<FeedbackClient>;
 
-    const CUSTOM_ID: &'static str = "feedback_form";
-    const IS_EPHEMERAL: bool = true;
-
-    fn new(interaction: Interaction, data: Self::RequiredData) -> Result<Self> {
+    fn new(interaction: Interaction, data: Self::Data) -> Result<Self> {
         let components = interaction.data.ok()?.modal_data().ok()?.components;
 
         Ok(Self {
@@ -361,6 +352,11 @@ impl AppInteraction for FeedbackModal {
             locale: interaction.locale,
         })
     }
+}
+
+impl AppInteraction for FeedbackModal {
+    const CUSTOM_ID: &'static str = "feedback_form";
+    const IS_EPHEMERAL: bool = true;
 
     async fn run(self, handle: InteractionHandle) -> Result<()> {
         self.feedback_client
