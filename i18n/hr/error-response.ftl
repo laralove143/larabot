@@ -1,0 +1,3 @@
+title = Nešto je pošlo po zlu...
+description = Došlo je do pogreške prilikom pokušaja obrade vaše naredbe. Pogreška je prijavljena razvojnom programeru. Hvala na strpljenju.
+footer = Slobodno pružite više detalja o pogrešci koristeći gumb za povratne informacije.

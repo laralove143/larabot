@@ -67,6 +67,7 @@ wildcard_enum_match_arm = "allow"
 
 [dependencies]
 anyhow = "1.0"
+fluent-static = "0.2.4"
 reqwest = { version = "0.12", default-features = false, features = ["http2", "json", "rustls-tls"] }
 sentry = { version = "0.34", default-features = false, features = ["anyhow", "backtrace", "panic", "reqwest", "rustls", "tracing"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -77,6 +78,10 @@ twilight-gateway = "0.15"
 twilight-http = { version = "0.15", features = ["rustls-webpki-roots", "simd-json", "trust-dns"] }
 twilight-model = "0.15"
 twilight-util = { version = "0.15", features = ["builder"] }
+
+[build-dependencies]
+anyhow = "1.0"
+fluent-static-codegen = "0.2.4"
 
 [dev-dependencies]
 dotenvy = "0.15"

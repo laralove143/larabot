@@ -10,7 +10,7 @@ Although the code itself is very opinionated, feel free to fork the project and 
 
 #### 🫡 Command Creation
 
-Has a method to create a commands for the given guild or globally based on the build configuration.
+Has a method to create commands for the given guild or globally based on the build configuration.
 
 #### 🏃 Interaction Handling
 
@@ -21,8 +21,8 @@ reporting it to the user.
 
 ### 🌐 Localization
 
-Has a struct to hold text in a localized manner, with methods to get the text in the desired language or return
-Discord-compatible arrays of localized texts.
+Supports [Fluent](https://projectfluent.org) to localize the bot's messages with a locale struct for abstract default
+language fallback and a function to return Fluent messages in Discord-compatible value pairs.
 
 All user-facing texts used in this crate are also localized.
 

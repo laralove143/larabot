@@ -17,7 +17,11 @@ use twilight_model::{
 };
 
 use crate::{
-    interaction::feedback::{button::FeedbackButton, command::FeedbackCommand},
+    interaction::{
+        error_response::error_response,
+        feedback::{button::FeedbackButton, command::FeedbackCommand},
+    },
+    localization::Locale,
     option_ext::OptionExt,
 };
 
@@ -30,29 +34,29 @@ pub trait CreateCommand {
 }
 
 pub trait CreateButton {
-    fn button(locale: Option<&str>) -> Result<Button>;
+    fn button(locale: &Locale) -> Result<Button>;
 }
 
 pub trait CreateButtonWithData {
     type Data;
 
-    fn button(locale: Option<&str>, data: Self::Data) -> Result<Button>;
+    fn button(locale: &Locale, data: Self::Data) -> Result<Button>;
 }
 
 pub trait CreateModal {
-    fn show_response(locale: Option<&str>) -> Result<InteractionResponse>;
+    fn show_response(locale: &Locale) -> Result<InteractionResponse>;
 }
 
 pub trait CreateModalWithData {
     type Data;
 
-    fn show_response(locale: Option<&str>, data: Self::Data) -> Result<InteractionResponse>;
+    fn show_response(locale: &Locale, data: Self::Data) -> Result<InteractionResponse>;
 }
 
 pub trait CreateTextInput {
     const CUSTOM_ID: &'static str;
 
-    fn text_input(locale: Option<&str>) -> Result<TextInput>;
+    fn text_input(locale: &Locale) -> Result<TextInput>;
 }
 
 pub trait CreateTextInputWithData {
@@ -60,7 +64,7 @@ pub trait CreateTextInputWithData {
 
     const CUSTOM_ID: &'static str;
 
-    fn text_input(locale: Option<&str>, data: Self::Data) -> Result<TextInput>;
+    fn text_input(locale: &Locale, data: Self::Data) -> Result<TextInput>;
 }
 
 pub trait CreateAppInteraction: Sized {
@@ -102,9 +106,7 @@ pub trait AppInteraction: Sized {
 
         if let Err(err) = self.run(handle.clone()).await {
             handle
-                .respond(error_response::error_response(
-                    interaction.locale.as_deref(),
-                )?)
+                .respond(error_response(&interaction.locale.clone().into())?)
                 .await?;
 
             return Err(err);

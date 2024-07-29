@@ -1,0 +1,3 @@
+title = Something went wrong...
+description = An error occurred while trying to process your command. The error has been reported to the developer. Thank you for your patience.
+footer = Feel free to provide more details about the error using the feedback button.
