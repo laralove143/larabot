@@ -35,7 +35,7 @@ defmodule Larabot.Interactions do
 
       def handle(interaction) do
         command =
-          Enum.find(Timezoner.Interactions.commands(), fn cmd ->
+          Enum.find(commands(), fn cmd ->
             cmd.name() == interaction.data.name
           end)
 
