@@ -1,11 +1,10 @@
 defmodule Larabot.Interactions do
-  alias Larabot.Error
-  alias Nostrum.Api.ApplicationCommand
-
   @callback commands() :: any()
 
   defmacro __using__(_) do
     quote do
+      alias Larabot.Error
+
       @app Mix.Project.config()[:app]
 
       @behaviour Larabot.Interactions
