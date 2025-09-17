@@ -1,4 +1,5 @@
 defmodule Larabot.Interactions do
+  alias Larabot.Error
   alias Nostrum.Api.ApplicationCommand
 
   @callback commands() :: any()
