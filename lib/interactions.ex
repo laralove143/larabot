@@ -4,6 +4,7 @@ defmodule Larabot.Interactions do
   defmacro __using__(_) do
     quote do
       alias Larabot.Error
+      alias Nostrum.Api.ApplicationCommand
 
       @app Mix.Project.config()[:app]
 
