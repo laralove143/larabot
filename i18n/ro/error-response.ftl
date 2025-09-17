@@ -1,3 +1,0 @@
-title = Ceva a mers prost...
-description = A apărut o eroare în timpul încercării de a procesa comanda dumneavoastră. Eroarea a fost raportată dezvoltatorului. Vă mulțumim pentru răbdare.
-footer = Nu ezitați să oferiți mai multe detalii despre eroare utilizând butonul de feedback.

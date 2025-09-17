@@ -1,3 +1,0 @@
-title = Coś poszło nie tak...
-description = Wystąpił błąd podczas próby przetworzenia twojej komendy. Błąd został zgłoszony do dewelopera. Dziękujemy za cierpliwość.
-footer = Śmiało podaj więcej szczegółów na temat błędu za pomocą przycisku opinii.

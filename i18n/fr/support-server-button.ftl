@@ -1,1 +1,0 @@
-label = Serveur de support

@@ -1,3 +1,0 @@
-title = Bir şeyler ters gitti...
-description = Komutunuz işlenirken bir hata oluştu. Hata geliştiriciye bildirildi. Sabrınız için teşekkür ederiz.
-footer = Geri Bildirim Düğmesini kullanarak hatayla ilgili daha fazla detay sağlamaktan çekinmeyin.

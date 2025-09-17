@@ -1,3 +1,0 @@
-title = Noe gikk galt...
-description = Det oppstod en feil under forsøket på å behandle kommandoen din. Feilen er rapportert til utvikleren. Takk for din tålmodighet.
-footer = Føl deg fri til å gi flere detaljer om feilen ved å bruke tilbakemeldingsknappen.

@@ -1,3 +1,0 @@
-title = Valami elromlott...
-description = Hiba történt a parancs feldolgozása közben. A hibát jelentették a fejlesztőnek. Köszönjük türelmét.
-footer = Nyugodtan adjon meg több részletet a hiba kapcsán a visszajelzés gomb használatával.

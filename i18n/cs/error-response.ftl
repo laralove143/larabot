@@ -1,3 +1,0 @@
-title = Něco se pokazilo...
-description = Při zpracování vašeho příkazu došlo k chybě. Chyba byla nahlášena vývojáři. Děkujeme za vaši trpělivost.
-footer = Klidně poskytněte více podrobností o chybě pomocí tlačítka pro zpětnou vazbu.

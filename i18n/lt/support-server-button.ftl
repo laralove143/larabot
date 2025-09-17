@@ -1,1 +1,0 @@
-label = Palaikymo serveris

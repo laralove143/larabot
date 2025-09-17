@@ -1,3 +1,0 @@
-title = Jotain meni pieleen...
-description = Komennon käsittelyssä tapahtui virhe. Virhe on raportoitu kehittäjälle. Kiitos kärsivällisyydestäsi.
-footer = Voit antaa lisätietoja virheestä käyttämällä palautepainiketta.

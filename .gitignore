@@ -1,5 +1,10 @@
-.env
-.idea
-Cargo.lock
-src/text.rs
-target
+*.ez
+/_build/
+/.elixir_ls/
+/cover/
+/deps/
+/doc/
+/tmp/
+erl_crash.dump
+larabot-*.tar
+mix.lock

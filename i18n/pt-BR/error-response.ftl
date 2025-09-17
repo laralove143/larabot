@@ -1,3 +1,0 @@
-title = Algo deu errado...
-description = Ocorreu um erro ao tentar processar seu comando. O erro foi reportado ao desenvolvedor. Obrigado pela sua paciência.
-footer = Fique à vontade para fornecer mais detalhes sobre o erro usando o botão de feedback.

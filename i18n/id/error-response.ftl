@@ -1,3 +1,0 @@
-title = Ada yang salah...
-description = Terjadi kesalahan saat mencoba memproses perintah Anda. Kesalahan telah dilaporkan kepada pengembang. Terima kasih atas kesabaran Anda.
-footer = Jangan ragu untuk memberikan lebih banyak detail tentang kesalahan menggunakan tombol umpan balik.

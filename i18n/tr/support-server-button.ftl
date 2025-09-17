@@ -1,1 +1,0 @@
-label = Destek Sunucusu

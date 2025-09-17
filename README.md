@@ -1,53 +1,37 @@
 # 🤖 larabot
 
-This repository is a non-published Rust crate that has the common code used by my Discord bots.
+This repository is a non-published Elixir library that has the common code used by my Discord bots.
 
 Although the code itself is very opinionated, feel free to fork the project and adjust it however you wish.
 
 ## ✨ Features
 
-### 🔃 Interaction Handling Flow
+### 📝 Logging
 
-#### 🫡 Command Creation
-
-Has a method to create commands for the given guild or globally based on the build configuration.
-
-#### 🏃 Interaction Handling
-
-Provides a trait to handle the interaction, which is meant to be implemented on each interaction's struct.
-
-The trait's provided `handle` method sets up automatic deferring, runs the interaction, and handles the error by
-reporting it to the user.
-
-### 🌐 Localization
-
-Supports [Fluent](https://projectfluent.org) to localize the bot's messages with a locale struct for abstract default
-language fallback and a function to return Fluent messages in Discord-compatible value pairs.
-
-All user-facing texts used in this crate are also localized.
+Sets up logging with [DiscoLog](https://github.com/mrdotb/disco-log).
 
 ### 📨 User Feedback
 
-Includes a command that users can use to provide feedback, which uses [Sentry] to report the feedback.
+Includes a command that users can use to provide feedback, which uses logging to report the feedback.
 
-Users can also provide feedback with the button attached to the interaction error message.
+### 🏃 Command Behavior
 
-### 📝 Tracing
+Provides a behavior to define and handle a command.
 
-Has a function to set up [tracing](https://docs.rs/tracing) with a formatter, environment
-filtering, [Sentry] support, and [log](https://docs.rs/log) crate compatibility.
+Has a method to create commands for the given guild and globally. Saves command IDs to be accessible from anywhere.
 
-### 🙈 Generic Option to Result Conversion
+### 🚨 Error Handling
 
-Provides a trait to convert an `Option` to a `Result` concisely. This is here because the Discord API returns many
-optional values.
+Provides methods to handle errors concisely.
 
 ### 📡 Event Handling
 
-Provides methods to handle the ready event, as well as errors that occur while handling or receiving an event.
+Provides a behavior to handle events.
+
+### ⏰ Scheduling
+
+Has a behavior to easily run periodic tasks in a `GenServer`.
 
 ### 🎨 Colors
 
-Allows you to use [Discord-defined colors](https://discord.com/branding) with an enum the crate provides.
-
-[Sentry]: https://sentry.io
+Allows you to use [Discord-defined colors](https://my.corebook.io/1zObrQ89Q4wHhgFCfYIUhMUvmNf4XjxO/04-color-gradients/colors) and colors of button styles.
