@@ -34,4 +34,4 @@ Has a behavior to easily run periodic tasks in a `GenServer`.
 
 ### 🎨 Colors
 
-Allows you to use [Discord-defined colors](https://my.corebook.io/1zObrQ89Q4wHhgFCfYIUhMUvmNf4XjxO/04-color-gradients/colors) and colors of button styles.
+Allows you to use [Discord-defined colors](https://my.corebook.io/1zObrQ89Q4wHhgFCfYIUhMUvmNf4XjxO/04-color-gradients/colors?m=6596168) and colors of button styles.
