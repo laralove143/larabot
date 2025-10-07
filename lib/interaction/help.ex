@@ -7,6 +7,7 @@ defmodule Larabot.Interaction.Help do
   defmacro __using__(_) do
     quote do
       @behaviour Larabot.Interaction
+      @behaviour Larabot.Interaction.Help
 
       alias Larabot.Component
       alias Larabot.Error
