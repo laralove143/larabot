@@ -1,4 +1,4 @@
-defmodule Larabot.Interactions.Help do
+defmodule Larabot.Interaction.Help do
   @callback title() :: any()
   @callback description() :: any()
   @callback components() :: any()
